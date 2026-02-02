@@ -43,7 +43,11 @@ export async function request<T>(path: string, options: RequestInit): Promise<T>
     const bodyStr = typeof finalOptions.body === 'string' ? finalOptions.body : ''
     if (bodyStr && bodyStr.length > 60000) keepalive = false
   } catch {}
-  const timeoutMs = String(finalOptions.method || 'GET').toUpperCase() === 'GET' ? 15000 : 20000
+  try {
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+    if (/Android|iPhone|iPad|iPod|Mobile/i.test(ua)) keepalive = false
+  } catch {}
+  const timeoutMs = String(finalOptions.method || 'GET').toUpperCase() === 'GET' ? 25000 : 35000
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), timeoutMs)
   try {
