@@ -1,7 +1,18 @@
 import { useEffect, useState } from 'react'
 import { FaGoogle, FaApple, FaGithub } from 'react-icons/fa'
 
-const API_URL = (import.meta.env.VITE_API_URL as string) || 'https://smart-police-complaint-system.onrender.com/api'
+function resolveApiUrl() {
+  try {
+    const ls = typeof window !== 'undefined' ? ((localStorage.getItem('apiResolved') || localStorage.getItem('apiBaseOverride') || '')).trim() : ''
+    const envBase = ((import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE_URL as string) || '').trim()
+    const raw = ls || envBase
+    let base = raw || (typeof window !== 'undefined' ? `${window.location.origin}/api` : '/api')
+    base = base.replace(/\/$/, '')
+    return base.endsWith('/api') ? base : `${base}/api`
+  } catch {
+    return '/api'
+  }
+}
 
 type Providers = { google: boolean; github: boolean; apple: boolean }
 
@@ -13,11 +24,11 @@ export default function SocialAuth() {
     (async () => {
       setLoading(true)
       try {
+        const API_URL = resolveApiUrl()
         const res = await fetch(`${API_URL}/oauth/providers`).then((r) => r.json())
         setProviders({ google: !!res.google, github: !!res.github, apple: !!res.apple })
       } catch {
-        // Fallback defaults
-        setProviders({ google: true, github: true, apple: false })
+        setProviders({ google: false, github: false, apple: false })
       } finally {
         setLoading(false)
       }
@@ -25,6 +36,7 @@ export default function SocialAuth() {
   }, [])
 
   const startAuth = (provider: 'google' | 'github' | 'apple') => {
+    const API_URL = resolveApiUrl()
     window.location.href = `${API_URL}/auth/${provider}`
   }
 

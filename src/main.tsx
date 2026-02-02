@@ -4,14 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 
-// Ensure production uses the provided Render API URL by default
-try {
-  if (import.meta.env.PROD) {
-    const desired = 'https://smart-police-complaint-system.onrender.com'
-    const current = localStorage.getItem('apiBaseOverride') || ''
-    if (current !== desired) localStorage.setItem('apiBaseOverride', desired)
-  }
-} catch {}
+// Use environment-provided API URL; avoid hardcoded external overrides in production
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
