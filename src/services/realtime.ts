@@ -2,8 +2,11 @@ import { io, Socket } from 'socket.io-client'
 
 function getSocketBaseUrl() {
   try {
-    const lsResolved = typeof window !== 'undefined' ? (localStorage.getItem('apiResolved') || localStorage.getItem('apiBaseOverride') || '') : ''
-    const envBase = (import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE_URL as string) || ''
+    const lsResolvedRaw = typeof window !== 'undefined' ? (localStorage.getItem('apiResolved') || localStorage.getItem('apiBaseOverride') || '') : ''
+    const envBaseRaw = (import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE_URL as string) || ''
+    const invalid = (v: string) => /smart-police-complaint-system\.onrender\.com/i.test((v || '').trim())
+    const lsResolved = invalid(lsResolvedRaw) ? '' : lsResolvedRaw
+    const envBase = invalid(envBaseRaw) ? '' : envBaseRaw
     const raw = (lsResolved && lsResolved.trim()) ? lsResolved : envBase
     const fallback = (typeof window !== 'undefined'
       ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.vercel.app/api' : `${window.location.origin}/api`)

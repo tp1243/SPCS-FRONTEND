@@ -3,10 +3,15 @@ import { FaGoogle, FaApple, FaGithub } from 'react-icons/fa'
 
 function resolveApiUrl() {
   try {
-    const ls = typeof window !== 'undefined' ? ((localStorage.getItem('apiResolved') || localStorage.getItem('apiBaseOverride') || '')).trim() : ''
-    const envBase = ((import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE_URL as string) || '').trim()
+    const lsRaw = typeof window !== 'undefined' ? ((localStorage.getItem('apiResolved') || localStorage.getItem('apiBaseOverride') || '')).trim() : ''
+    const envRaw = ((import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE_URL as string) || '').trim()
+    const invalid = (v: string) => /smart-police-complaint-system\.onrender\.com/i.test(v || '')
+    const ls = invalid(lsRaw) ? '' : lsRaw
+    const envBase = invalid(envRaw) ? '' : envRaw
     const raw = ls || envBase
-    let base = raw || (typeof window !== 'undefined' ? `${window.location.origin}/api` : '/api')
+    let base = raw || (typeof window !== 'undefined'
+      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.vercel.app/api' : `${window.location.origin}/api`)
+      : '/api')
     base = base.replace(/\/$/, '')
     return base.endsWith('/api') ? base : `${base}/api`
   } catch {

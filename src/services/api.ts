@@ -16,10 +16,13 @@ function normalizeBase(u: string) {
 
 async function resolveApiBase(): Promise<string> {
   if (cachedApiBase) return cachedApiBase
-  const stored = typeof window !== 'undefined' ? (localStorage.getItem('apiResolved') || '').trim() : ''
-  const override = typeof window !== 'undefined' ? (localStorage.getItem('apiBaseOverride') || '').trim() : ''
+  const storedRaw = typeof window !== 'undefined' ? (localStorage.getItem('apiResolved') || '').trim() : ''
+  const overrideRaw = typeof window !== 'undefined' ? (localStorage.getItem('apiBaseOverride') || '').trim() : ''
   const envBase = (apiBaseRaw || '').trim()
   const isSuspended = /smart-police-complaint-system\.onrender\.com/i.test(envBase)
+  const invalid = (v: string) => /smart-police-complaint-system\.onrender\.com/i.test(v || '')
+  const stored = invalid(storedRaw) ? '' : storedRaw
+  const override = invalid(overrideRaw) ? '' : overrideRaw
   const chosen =
     (stored || '') ||
     (override || '') ||
