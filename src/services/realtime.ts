@@ -5,11 +5,13 @@ function getSocketBaseUrl() {
     const lsResolved = typeof window !== 'undefined' ? (localStorage.getItem('apiResolved') || localStorage.getItem('apiBaseOverride') || '') : ''
     const envBase = (import.meta.env.VITE_API_URL as string) || (import.meta.env.VITE_API_BASE_URL as string) || ''
     const raw = (lsResolved && lsResolved.trim()) ? lsResolved : envBase
-    const fallback = (typeof window !== 'undefined' && !import.meta.env.PROD) ? 'http://localhost:5175/api' : `${window.location.origin}/api`
+    const fallback = (typeof window !== 'undefined'
+      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.vercel.app/api' : `${window.location.origin}/api`)
+      : 'http://localhost:5175/api')
     const base = (raw.trim() ? raw.trim() : fallback)
     return base.replace(/\/api$/, '')
   } catch {
-    return (typeof window !== 'undefined') ? window.location.origin : 'http://localhost:5175'
+    return (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5175')
   }
 }
 

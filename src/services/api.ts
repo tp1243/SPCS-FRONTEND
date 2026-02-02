@@ -16,14 +16,17 @@ function normalizeBase(u: string) {
 
 async function resolveApiBase(): Promise<string> {
   if (cachedApiBase) return cachedApiBase
-  const envBase = apiBaseRaw || ''
-  if (envBase) {
-    cachedApiBase = normalizeBase(envBase)
-  } else {
-    const override = typeof window !== 'undefined' ? localStorage.getItem('apiBaseOverride') || '' : ''
-    const chosen = override || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5175')
-    cachedApiBase = normalizeBase(chosen)
-  }
+  const stored = typeof window !== 'undefined' ? (localStorage.getItem('apiResolved') || '').trim() : ''
+  const override = typeof window !== 'undefined' ? (localStorage.getItem('apiBaseOverride') || '').trim() : ''
+  const envBase = (apiBaseRaw || '').trim()
+  const isSuspended = /smart-police-complaint-system\.onrender\.com/i.test(envBase)
+  const chosen =
+    (stored || '') ||
+    (override || '') ||
+    ((!isSuspended && envBase) ? envBase : (typeof window !== 'undefined'
+      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.vercel.app' : window.location.origin)
+      : 'http://localhost:5175'))
+  cachedApiBase = normalizeBase(chosen)
   if (typeof window !== 'undefined') localStorage.setItem('apiResolved', cachedApiBase)
   return cachedApiBase
 }
