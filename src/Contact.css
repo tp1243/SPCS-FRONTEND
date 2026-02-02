@@ -1,0 +1,141 @@
+.contact-section {
+  background: radial-gradient(circle at top left, #0f0f0f, #1a1a1a 70%);
+  color: #fff;
+  padding: 80px 8%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-header h2 {
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #358ca4, #358ca4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.contact-header p {
+  color: #ccc;
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 40px;
+  align-items: start;
+}
+
+.contact-form {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(49, 114, 218, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  padding: 14px 45px 14px 45px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-group textarea {
+  resize: none;
+  height: 120px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #ff0057;
+  box-shadow: 0 0 10px #ff0057;
+  outline: none;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 14px;
+  color: #ff0057;
+  font-size: 1.2rem;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(90deg, #ff0057, #ff4444);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.btn-submit:hover {
+  box-shadow: 0 0 15px #ff0057;
+}
+
+.contact-map {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 0 15px rgba(79, 79, 224, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+.contact-info {
+  margin-top: 20px;
+  text-align: left;
+  padding: 0 10px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.info-item svg {
+  color: #ff0057;
+}
+
+.info-item a {
+  color: #ff4444;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.info-item a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 60px 5%;
+  }
+
+  .contact-header h2 {
+    font-size: 2rem;
+  }
+}

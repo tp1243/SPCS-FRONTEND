@@ -1,0 +1,113 @@
+.about-section {
+  background: linear-gradient(135deg, #0e0e10, #1a1a1d, #0e0e10);
+  color: #fff;
+  padding: 5rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, #00c6ff 0%, transparent 40%),
+              radial-gradient(circle at bottom right, #0072ff 0%, transparent 40%);
+  opacity: 0.08;
+  z-index: 0;
+}
+
+.about-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 1;
+}
+
+.about-header h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.about-header p {
+  color: #cfcfcf;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+.about-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.about-card {
+  background: rgba(31, 31, 35, 0.8);
+  border: 1px solid rgba(100, 100, 100, 0.3);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 150, 255, 0.2);
+}
+
+.about-card h3 {
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  color: #00b4ff;
+}
+
+.about-card p {
+  color: #bfbfbf;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-top: 0.5rem;
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+}
+
+.icon-style {
+  width: 48px;
+  height: 48px;
+  color: #00b4ff;
+}
+
+.icon-style.cyan {
+  color: #00ffff;
+}
+
+.icon-style.blue {
+  color: #007bff;
+}
+
+.about-mission {
+  margin-top: 4rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-mission p {
+  font-size: 1.1rem;
+  color: #d0d0d0;
+  line-height: 1.8;
+}
+
+.highlight {
+  color: #00ffff;
+  font-weight: 600;
+}

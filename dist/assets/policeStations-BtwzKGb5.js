@@ -1,0 +1,1 @@
+const a=["Vashi","Turbhe","Rabale","Koparkhairane","Ghansoli","Digha","Nerul","Sanpada","CBD Belapur","APMC","Kharghar","Kamothe","Kalamboli","Taloja","Khandeshwar","Panvel City","Panvel Taluka"];export{a as N};

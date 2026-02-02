@@ -1,0 +1,157 @@
+/* ===============================
+   Features Section Styling
+   Theme: Matches About Section & How It Works
+=================================*/
+
+#features {
+  background: linear-gradient(135deg, #0e0e10, #1a1a1d);
+  color: #fff;
+  padding: 6rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+#features::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, #00c6ff22 0%, transparent 40%),
+              radial-gradient(circle at bottom right, #0072ff22 0%, transparent 40%);
+  opacity: 0.2;
+  z-index: 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.section-header h2 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.section-header p {
+  color: #cfcfcf;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ===============================
+   Features Grid Layout
+=================================*/
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.4rem;
+  position: relative;
+  z-index: 2;
+  justify-items: center;
+}
+
+/* ===============================
+   Feature Card Styling
+=================================*/
+
+.feature-card {
+  background: rgba(31, 31, 35, 0.85);
+  border: 1px solid rgba(0, 150, 255, 0.2);
+  border-radius: 1rem;
+  padding: 2.5rem 1.8rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  width: 90%;
+  max-width: 3400px;
+}
+
+.feature-card:hover {
+  border-color: rgba(0, 180, 255, 0.5);
+  box-shadow: 0 0 25px rgba(0, 150, 255, 0.25);
+  transform: translateY(-8px);
+}
+
+/* ===============================
+   Feature Icon Styling
+=================================*/
+
+.feature-icon {
+  font-size: 2.8rem;
+  color: #00b4ff;
+  background: rgba(0, 150, 255, 0.12);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.3rem;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  background: linear-gradient(135deg, #00b4ff, #0072ff);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(0, 150, 255, 0.6);
+  transform: scale(1.1);
+}
+
+/* ===============================
+   Text Styling Inside Card
+=================================*/
+
+.feature-card h3 {
+  color: #00c6ff;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.feature-card p {
+  color: #ccc;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+/* ===============================
+   Responsive Design
+=================================*/
+
+@media (max-width: 1024px) {
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  #features {
+    padding: 4rem 1rem;
+  }
+
+  .feature-card {
+    max-width: 300px;
+    padding: 2rem 1.4rem;
+  }
+
+  .feature-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 2.4rem;
+  }
+
+  .section-header h2 {
+    font-size: 2.2rem;
+  }
+}

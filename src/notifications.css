@@ -1,0 +1,93 @@
+/* Shared styles for notifications list and modern search */
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.notif-item.unread {
+  border-color: var(--primary);
+}
+
+.notif-item .left {
+  flex: 1;
+}
+
+.notif-item .title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.notif-item .meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.notif-item .right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search.modern {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.search.modern input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+}
+
+.search.modern .clear-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.filters .pill {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .notif-item { flex-direction: column; align-items: stretch; }
+  .notif-item .right { justify-content: flex-start; }
+  .search.modern { gap: 6px; padding: 10px 10px; }
+
+  /* Mobile-only: remove card look for notifications panel and search */
+  .notif-panel { background: transparent; border: none; box-shadow: none; padding: 0; margin: 0; }
+  .notif-panel .search.modern { background: transparent; border: none; padding: 0; margin: 8px 16px; gap: 10px; }
+  .notif-panel .search.modern input { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; background: transparent; }
+  .notif-panel .search.modern .clear-btn { border-color: var(--border); }
+  /* Hide header controls and filters on mobile; keep search visible */
+  .notif-panel .notif-header { display: none; }
+  .notif-panel .filters { display: none; }
+
+  .notif-panel .notif-list { gap: 12px; padding: 0 16px; }
+  .notif-panel .notif-item { background: transparent; border: none; border-bottom: 1px solid var(--border); border-radius: 0; padding: 12px 0; }
+  .notif-panel .notif-item.unread { border-bottom-color: var(--primary); }
+  .notif-panel .notif-item .title { font-weight: 600; }
+  .notif-panel .notif-item .right { gap: 10px; padding-top: 6px; }
+}

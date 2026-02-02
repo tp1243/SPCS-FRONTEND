@@ -1,0 +1,130 @@
+/* ================================
+   Stats Section (Themed like About)
+=================================== */
+
+.stats-section {
+  background: linear-gradient(135deg, #0e0e10, #1a1a1d, #0e0e10);
+  color: #fff;
+  padding: 5rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle glowing overlay for depth */
+.stats-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, #00c6ff 0%, transparent 40%),
+              radial-gradient(circle at bottom right, #0072ff 0%, transparent 40%);
+  opacity: 0.08;
+  z-index: 0;
+}
+
+/* Header styling */
+.stats-header {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 1;
+}
+
+.stats-header h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.stats-header p {
+  color: #cfcfcf;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+/* Grid layout */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Stat cards with glassmorphism and glow */
+.stat-card {
+  background: rgba(31, 31, 35, 0.8);
+  border: 1px solid rgba(100, 100, 100, 0.3);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 150, 255, 0.25);
+  border-color: rgba(0, 200, 255, 0.3);
+}
+
+/* Emoji / Icon */
+.stat-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 10px rgba(0, 180, 255, 0.4));
+}
+
+/* Value and label */
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00b4ff;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #bfbfbf;
+  line-height: 1.5;
+}
+
+/* Footer note */
+.stat-note {
+  margin-top: 4rem;
+  text-align: center;
+  color: #cfcfcf;
+  font-size: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-note span {
+  color: #00b4ff;
+  margin-right: 6px;
+  font-weight: 600;
+}
+
+/* Subtle animation glow on hover */
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(0, 198, 255, 0.1), rgba(0, 114, 255, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover::after {
+  opacity: 1;
+}

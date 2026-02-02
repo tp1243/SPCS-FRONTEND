@@ -1,0 +1,300 @@
+/* =========================
+   Profile Settings Page
+   Modern UI Design
+   ========================= */
+.profile-settings {
+  padding: 2.5rem;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background-color: #1a1a1d;
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
+}
+
+/* Page Header */
+.profile-settings h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #00b4d8;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Card Layout */
+.card {
+  background-color: #242526;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+  background-color: #2c2f33;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #00b4d8;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+/* Grid for side-by-side layout */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.9fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-bottom: 2rem;
+}
+
+/* =========================
+   Profile Overview Section
+   ========================= */
+.avatar-upload {
+  position: relative;
+  max-width: 205px;
+  margin: 0 auto 1.5rem;
+}
+
+.avatar-edit {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  z-index: 1;
+}
+
+.avatar-edit input {
+  display: none;
+}
+
+.avatar-edit label {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #00b4d8;
+  box-shadow: 0px 4px 8px rgba(0, 180, 216, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.avatar-edit label:hover {
+  background: #0090b8;
+  transform: scale(1.05);
+}
+
+.avatar-edit label::after {
+  content: "\f040";
+  font-family: "FontAwesome";
+  color: #fff;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.avatar-preview {
+  width: 192px;
+  height: 192px;
+  border-radius: 100%;
+  border: 6px solid #2c2f33;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.avatar-preview > div {
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* User Info */
+.user-info {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.user-info h4 {
+  margin: 0 0 0.3rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.user-info p {
+  margin: 0;
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+/* =========================
+   Form Section
+   ========================= */
+.form-row {
+  position: relative;
+  margin-bottom: 1.8rem;
+}
+
+.form-row label {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  font-size: 0.95rem;
+  color: #aaa;
+  background-color: transparent;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  padding: 0.9rem 0.8rem;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #1e1f23;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: #00b4d8;
+  background-color: #2c2f33;
+}
+
+/* Floating label effect */
+.form-row input:focus + label,
+.form-row input:not(:placeholder-shown) + label,
+.form-row textarea:focus + label,
+.form-row textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 10px;
+  font-size: 0.8rem;
+  color: #00b4d8;
+  background-color: #1a1a1d;
+  padding: 0 5px;
+}
+
+.form-row input[readOnly] {
+  background-color: #2c2f33;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Action Buttons
+   ========================= */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.actions button {
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.actions .save-btn {
+  background-color: #00b4d8;
+  color: #fff;
+}
+
+.actions .save-btn:hover {
+  background-color: #0090b8;
+  transform: translateY(-2px);
+}
+
+.actions .cancel-btn {
+  background-color: #444;
+  color: #fff;
+}
+
+.actions .cancel-btn:hover {
+  background-color: #555;
+  transform: translateY(-2px);
+}
+
+/* Toast notifications */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  background: #2c2f33;
+  border-left: 4px solid #777;
+  z-index: 1000;
+  animation: toast-in 200ms ease-out;
+}
+.toast.success { border-left-color: #2ecc71; }
+.toast.error { border-left-color: #e74c3c; }
+.toast.info { border-left-color: #3498db; }
+
+@keyframes toast-in {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* =========================
+   Responsive Design
+   ========================= */
+@media (max-width: 768px) {
+  .profile-settings { padding: 1rem; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .card-body {
+    padding: 1rem;
+  }
+
+  .form-row input,
+  .form-row select {
+    padding: 0.8rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Extra-compact on small phones */
+@media (max-width: 480px) {
+  .profile-settings { padding: 0.75rem; }
+  .profile-grid { gap: 1rem; }
+  .card-body { padding: 0.75rem; }
+  .form-row { margin-bottom: 1.2rem; }
+  .form-row input,
+  .form-row select,
+  .form-row textarea { padding: 0.9rem; }
+  .avatar-upload { max-width: 180px; }
+}

@@ -1,0 +1,41 @@
+# Render Blueprint for Smart Police Complaint System
+
+services:
+  # API (Node.js/Express + MongoDB)
+  - type: web
+    name: spcs-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm ci
+    startCommand: node index.js
+    healthCheckPath: /api/health
+    envVars:
+      # Required: set in Render Dashboard for production
+      - key: MONGO_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      # Optional: wire frontend URL automatically
+      - key: FRONTEND_URL
+        fromService:
+          name: spcs-frontend
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+
+  # Frontend (React + Vite)
+  - type: web
+    name: spcs-frontend
+    runtime: static
+    rootDir: my-react-app
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      # Point Vite to the API URL (works for previews too)
+      - key: VITE_API_URL
+        fromService:
+          name: spcs-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+
+previews:
+  generation: automatic
