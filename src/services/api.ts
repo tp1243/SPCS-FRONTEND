@@ -27,7 +27,7 @@ async function resolveApiBase(): Promise<string> {
     (stored || '') ||
     (override || '') ||
     ((!isSuspended && envBase) ? envBase : (typeof window !== 'undefined'
-      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.vercel.app' : window.location.origin)
+      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.onrender.com' : window.location.origin)
       : 'http://localhost:5175'))
   cachedApiBase = normalizeBase(chosen)
   if (typeof window !== 'undefined') localStorage.setItem('apiResolved', cachedApiBase)

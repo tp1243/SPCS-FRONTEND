@@ -9,7 +9,7 @@ function getSocketBaseUrl() {
     const envBase = invalid(envBaseRaw) ? '' : envBaseRaw
     const raw = (lsResolved && lsResolved.trim()) ? lsResolved : envBase
     const fallback = (typeof window !== 'undefined'
-      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.vercel.app/api' : `${window.location.origin}/api`)
+      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.onrender.com/api' : `${window.location.origin}/api`)
       : 'http://localhost:5175/api')
     const base = (raw.trim() ? raw.trim() : fallback)
     return base.replace(/\/api$/, '')

@@ -10,7 +10,7 @@ function resolveApiUrl() {
     const envBase = invalid(envRaw) ? '' : envRaw
     const raw = ls || envBase
     let base = raw || (typeof window !== 'undefined'
-      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.vercel.app/api' : `${window.location.origin}/api`)
+      ? (window.location.hostname.includes('spcs-frontend.vercel.app') ? 'https://spcs-backend.onrender.com/api' : `${window.location.origin}/api`)
       : '/api')
     base = base.replace(/\/$/, '')
     return base.endsWith('/api') ? base : `${base}/api`
