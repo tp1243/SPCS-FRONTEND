@@ -67,7 +67,7 @@ export default function Hero() {
           >
             <button
               className="btn primary"
-              onClick={() => navigate("/user")}
+              onClick={() => navigate("/login")}
             >
               Report Incident
             </button>
