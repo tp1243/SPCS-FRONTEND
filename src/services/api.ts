@@ -69,11 +69,11 @@ export const api = {
   async register(username: string, email: string, password: string, phone?: string): Promise<AuthResponse> {
     return request<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, phone }) })
   },
-  async registerBegin(username: string, email: string, password: string, phone?: string) {
-    return request<{ ok: boolean }>('/auth/register/begin', { method: 'POST', body: JSON.stringify({ username, email, password, phone }) })
+  async registerBegin(username: string, email: string, password: string, phone?: string, aadhaarPhotoData?: string) {
+    return request<{ ok: boolean }>('/auth/register/begin', { method: 'POST', body: JSON.stringify({ username, email, password, phone, aadhaarPhotoData }) })
   },
-  async registerVerify(username: string, email: string, password: string, otp: string, phone?: string): Promise<AuthResponse> {
-    return request<AuthResponse>('/auth/register/verify-otp', { method: 'POST', body: JSON.stringify({ username, email, password, otp, phone }) })
+  async registerVerify(username: string, email: string, password: string, otp: string, phone?: string, aadhaarPhotoData?: string): Promise<AuthResponse> {
+    return request<AuthResponse>('/auth/register/verify-otp', { method: 'POST', body: JSON.stringify({ username, email, password, otp, phone, aadhaarPhotoData }) })
   },
   async policeRegister(username: string, email: string, password: string, station: string): Promise<AuthPoliceResponse> {
     return request<AuthPoliceResponse>('/police/register', { method: 'POST', body: JSON.stringify({ username, email, password, station }) })

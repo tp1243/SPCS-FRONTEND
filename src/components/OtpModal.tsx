@@ -9,7 +9,7 @@ type Props = {
   open: boolean
   purpose: Purpose
   email: string
-  beginPayload?: { username?: string; password?: string; phone?: string }
+  beginPayload?: { username?: string; password?: string; phone?: string; aadhaarPhotoData?: string }
   onClose: () => void
   onSuccess: (result: any) => void
 }
@@ -36,7 +36,7 @@ export default function OtpModal({ open, purpose, email, beginPayload, onClose, 
       try {
         setLoading(true)
         if (purpose === 'register') {
-          await api.registerBegin(String(beginPayload?.username || ''), email, String(beginPayload?.password || ''), beginPayload?.phone)
+          await api.registerBegin(String(beginPayload?.username || ''), email, String(beginPayload?.password || ''), beginPayload?.phone, beginPayload?.aadhaarPhotoData)
         } else {
           await api.loginBegin(email, String(beginPayload?.password || ''))
         }
@@ -106,7 +106,7 @@ export default function OtpModal({ open, purpose, email, beginPayload, onClose, 
     try {
       setLoading(true)
       if (purpose === 'register') {
-        const res = await api.registerVerify(String(beginPayload?.username || ''), email, String(beginPayload?.password || ''), otp.trim(), beginPayload?.phone)
+        const res = await api.registerVerify(String(beginPayload?.username || ''), email, String(beginPayload?.password || ''), otp.trim(), beginPayload?.phone, beginPayload?.aadhaarPhotoData)
         onSuccess(res)
       } else {
         const res = await api.loginVerify(email, otp.trim())
@@ -206,23 +206,28 @@ export default function OtpModal({ open, purpose, email, beginPayload, onClose, 
                     <h4 style={{ margin: 0 }}>{title}</h4>
                   </div>
                   <div className="muted">{sub}</div>
-                  <div className="otp-grid" style={{ marginTop: 14 }}>
+                  <motion.div
+                    className="otp-grid"
+                    style={{ marginTop: 14 }}
+                    animate={error ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
                     {[0, 1, 2, 3, 4, 5].map((i) => (
                       <motion.input
                         key={i}
                         ref={(el) => { otpRefs.current[i] = el }}
-                        className="otp-cell"
+                        className={`otp-cell${cells[i] ? ' filled' : ''}`}
                         inputMode="numeric"
                         maxLength={1}
                         value={cells[i]}
                         onChange={(e) => onCellChange(i, e.target.value)}
                         onKeyDown={(e) => onCellKeyDown(i, e)}
                         onPaste={(e) => onCellsPaste(i, e)}
-                        whileFocus={{ scale: 1.04, boxShadow: '0 0 0 3px rgba(99,102,241,0.35)' }}
-                        transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+                        whileFocus={{ scale: 1.06 }}
+                        transition={{ type: 'spring', stiffness: 420, damping: 24 }}
                       />
                     ))}
-                  </div>
+                  </motion.div>
                   {error && <div className="form-error small">{error}</div>}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 12 }}>
                     <motion.button
