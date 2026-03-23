@@ -69,8 +69,14 @@ export const api = {
   async register(username: string, email: string, password: string, phone?: string): Promise<AuthResponse> {
     return request<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, phone }) })
   },
-  async registerBegin(username: string, email: string, password: string, phone?: string, aadhaarPhotoData?: string) {
-    return request<{ ok: boolean }>('/auth/register/begin', { method: 'POST', body: JSON.stringify({ username, email, password, phone, aadhaarPhotoData }) })
+  async registerBegin(username: string, email: string, password: string, phone?: string, aadhaarPhotoData?: string, brand?: { subject?: string; html?: string; text?: string; supportEmail?: string; supportPhone?: string }) {
+    const payload: any = { username, email, password, phone, aadhaarPhotoData }
+    if (brand?.subject) { payload.subject = brand.subject; payload.otpSubject = brand.subject; payload.otpEmailSubject = brand.subject }
+    if (brand?.html) { payload.html = brand.html; payload.body = brand.html; payload.message = brand.html; payload.otpHtml = brand.html; payload.otpEmailHtml = brand.html }
+    if (brand?.text) { payload.text = brand.text; payload.otpText = brand.text; payload.otpEmailText = brand.text }
+    if (brand?.supportEmail) payload.supportEmail = brand.supportEmail
+    if (brand?.supportPhone) payload.supportPhone = brand.supportPhone
+    return request<{ ok: boolean }>('/auth/register/begin', { method: 'POST', body: JSON.stringify(payload) })
   },
   async registerVerify(username: string, email: string, password: string, otp: string, phone?: string, aadhaarPhotoData?: string): Promise<AuthResponse> {
     return request<AuthResponse>('/auth/register/verify-otp', { method: 'POST', body: JSON.stringify({ username, email, password, otp, phone, aadhaarPhotoData }) })
@@ -84,14 +90,26 @@ export const api = {
   async login(email: string, password: string): Promise<AuthResponse> {
     return request<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
   },
-  async loginBegin(email: string, password: string) {
-    return request<{ ok: boolean }>('/auth/login/begin', { method: 'POST', body: JSON.stringify({ email, password }) })
+  async loginBegin(email: string, password: string, brand?: { subject?: string; html?: string; text?: string; supportEmail?: string; supportPhone?: string }) {
+    const payload: any = { email, password }
+    if (brand?.subject) { payload.subject = brand.subject; payload.otpSubject = brand.subject; payload.otpEmailSubject = brand.subject }
+    if (brand?.html) { payload.html = brand.html; payload.body = brand.html; payload.message = brand.html; payload.otpHtml = brand.html; payload.otpEmailHtml = brand.html }
+    if (brand?.text) { payload.text = brand.text; payload.otpText = brand.text; payload.otpEmailText = brand.text }
+    if (brand?.supportEmail) payload.supportEmail = brand.supportEmail
+    if (brand?.supportPhone) payload.supportPhone = brand.supportPhone
+    return request<{ ok: boolean }>('/auth/login/begin', { method: 'POST', body: JSON.stringify(payload) })
   },
   async loginVerify(email: string, otp: string): Promise<AuthResponse> {
     return request<AuthResponse>('/auth/login/verify-otp', { method: 'POST', body: JSON.stringify({ email, otp }) })
   },
-  async otpResend(email: string, purpose: 'register' | 'login') {
-    return request<{ ok: boolean }>('/auth/otp/resend', { method: 'POST', body: JSON.stringify({ email, purpose }) })
+  async otpResend(email: string, purpose: 'register' | 'login', brand?: { subject?: string; html?: string; text?: string; supportEmail?: string; supportPhone?: string }) {
+    const payload: any = { email, purpose }
+    if (brand?.subject) { payload.subject = brand.subject; payload.otpSubject = brand.subject; payload.otpEmailSubject = brand.subject }
+    if (brand?.html) { payload.html = brand.html; payload.body = brand.html; payload.message = brand.html; payload.otpHtml = brand.html; payload.otpEmailHtml = brand.html }
+    if (brand?.text) { payload.text = brand.text; payload.otpText = brand.text; payload.otpEmailText = brand.text }
+    if (brand?.supportEmail) payload.supportEmail = brand.supportEmail
+    if (brand?.supportPhone) payload.supportPhone = brand.supportPhone
+    return request<{ ok: boolean }>('/auth/otp/resend', { method: 'POST', body: JSON.stringify(payload) })
   },
   // Removed OTP flows
   async profile(token: string) {

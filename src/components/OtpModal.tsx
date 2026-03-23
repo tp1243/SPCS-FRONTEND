@@ -35,10 +35,11 @@ export default function OtpModal({ open, purpose, email, beginPayload, onClose, 
     ;(async () => {
       try {
         setLoading(true)
+        const brand = buildOtpEmailBrand()
         if (purpose === 'register') {
-          await api.registerBegin(String(beginPayload?.username || ''), email, String(beginPayload?.password || ''), beginPayload?.phone, beginPayload?.aadhaarPhotoData)
+          await api.registerBegin(String(beginPayload?.username || ''), email, String(beginPayload?.password || ''), beginPayload?.phone, beginPayload?.aadhaarPhotoData, brand)
         } else {
-          await api.loginBegin(email, String(beginPayload?.password || ''))
+          await api.loginBegin(email, String(beginPayload?.password || ''), brand)
         }
         startTimers()
       } catch (e: any) {
@@ -124,7 +125,8 @@ export default function OtpModal({ open, purpose, email, beginPayload, onClose, 
     if (cooldownSec > 0) return
     try {
       setLoading(true)
-      await api.otpResend(email, purpose)
+      const brand = buildOtpEmailBrand()
+      await api.otpResend(email, purpose, brand)
       setCooldownSec(60)
       if (cdRef.current) window.clearInterval(cdRef.current)
       cdRef.current = window.setInterval(() => {
@@ -293,4 +295,83 @@ export default function OtpModal({ open, purpose, email, beginPayload, onClose, 
       )}
     </AnimatePresence>
   )
+}
+
+function buildOtpEmailBrand() {
+  const subject = 'Secure Verification Code – Smart Police Complaint System'
+  const text = [
+    'Subject: Secure Verification Code – Smart Police Complaint System',
+    '',
+    'Dear User,',
+    '',
+    'We received a request to verify your identity for accessing the Smart Police Complaint System.',
+    '',
+    'For your security, please use the One-Time Password (OTP) below to complete the verification process:',
+    '',
+    '🔐 Your Verification Code',
+    '{{OTP_CODE}}',
+    '',
+    '⏳ Validity: This OTP is valid for the next 5 minutes only.',
+    '',
+    '📌 Action Required: Enter this code on the verification screen to proceed securely.',
+    '',
+    '⚠️ Security Notice',
+    'Never share your OTP with anyone, including system administrators.',
+    'Our team will never ask for your OTP via phone or email.',
+    '',
+    'If you did not initiate this request, please ignore this email or report it immediately.',
+    '',
+    '📍 Request Details (for your awareness)',
+    'Time: [Auto-generated timestamp]',
+    'IP Address / Device: [Optional - if implemented]',
+    '',
+    'If you face any issues, please contact our support team.',
+    '',
+    'Regards,',
+    'Smart Police Complaint System Team',
+    '',
+    '📧 Support: support@spcs.com',
+    '📞 Helpline: +91-8591604077',
+  ].join('\n')
+  const html = `
+  <div style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.65;color:#0b1324;background:#f7f9fc;padding:24px">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #e5eaf0;border-radius:12px;overflow:hidden">
+      <tr>
+        <td style="padding:20px;background:#0b1324;color:#eaf2ff;border-bottom:1px solid #1f2a3d">
+          <div style="font-weight:700;font-size:16px">Smart Police Complaint System</div>
+          <div style="opacity:0.78;font-size:13px">Secure Verification Code</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:24px">
+          <p>Dear User,</p>
+          <p>We received a request to verify your identity for accessing the Smart Police Complaint System.</p>
+          <p>For your security, please use the One-Time Password (OTP) below to complete the verification process:</p>
+          <div style="margin:16px 0;padding:16px 18px;border:1px solid #e5eaf0;border-radius:10px;background:#f1f6ff">
+            <div style="font-weight:600;color:#0b1324;margin-bottom:8px">Your Verification Code</div>
+            <div style="font-size:26px;font-weight:800;letter-spacing:4px;color:#1e40af">{{OTP_CODE}}</div>
+            <div style="margin-top:8px;color:#334155">Validity: This OTP is valid for the next 5 minutes only.</div>
+          </div>
+          <p><strong>Action Required:</strong> Enter this code on the verification screen to proceed securely.</p>
+          <div style="margin:14px 0;padding:12px 14px;border:1px solid #fee2e2;border-radius:10px;background:#fff7f7;color:#7f1d1d">
+            <div style="font-weight:600;margin-bottom:6px">Security Notice</div>
+            <div>Never share your OTP with anyone, including system administrators. Our team will never ask for your OTP via phone or email.</div>
+          </div>
+          <div style="margin:12px 0;color:#334155">
+            <div style="font-weight:600">Request Details (for your awareness)</div>
+            <div>Time: [Auto-generated timestamp]</div>
+            <div>IP Address / Device: [Optional - if implemented]</div>
+          </div>
+          <p>If you did not initiate this request, please ignore this email or report it immediately.</p>
+          <p>Regards,<br/>Smart Police Complaint System Team</p>
+          <div style="margin-top:10px;color:#334155">
+            <div>Support: <a href="mailto:support@spcs.com">support@spcs.com</a></div>
+            <div>Helpline: +91-8591604077</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  `
+  return { subject, text, html, supportEmail: 'support@spcs.com', supportPhone: '+91-8591604077' }
 }
