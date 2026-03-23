@@ -15,6 +15,7 @@ export default function PoliceLogin() {
   const [loading, setLoading] = useState(false)
   const [showPwd, setShowPwd] = useState(false)
   const [error, setError] = useState('')
+  // Native dropdown list for station selection
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
