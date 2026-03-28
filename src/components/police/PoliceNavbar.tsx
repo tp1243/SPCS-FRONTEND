@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FiBell, FiSearch, FiUser, FiMoon, FiSun } from 'react-icons/fi';
+import { FiBell, FiSearch, FiUser, FiMoon, FiSun, FiVolume2, FiVolumeX } from 'react-icons/fi';
 import BrandIcon from '../BrandIcon';
 import { policeApi } from '../../services/police';
 import type { PoliceNotificationItem } from '../../types';
@@ -95,7 +95,7 @@ export default function PoliceNavbar({ token, username, onSearch, onLogout }: Pr
           <option value="mr">MR</option>
         </select>
         <button className="btn toggle" onClick={() => { const next = !soundOn; setSoundOn(next); localStorage.setItem('sound', next ? 'on' : 'off'); window.dispatchEvent(new Event(next ? 'spcs:enable-sound' : 'spcs:disable-sound')); }} title={soundOn ? 'Disable sound' : 'Enable sound'}>
-          <FiBell />
+          {soundOn ? <FiVolume2 /> : <FiVolumeX />}
         </button>
         <div className="avatar" onClick={() => setOpenProfile(v => !v)}><FiUser /></div>
         <div className="bell" onClick={() => setOpenBell(v => !v)}>

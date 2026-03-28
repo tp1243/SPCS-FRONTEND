@@ -350,6 +350,7 @@ function DetailsModalButton({ item, token }: { item: ComplaintRow; token: string
               <div><span className="muted">Category</span><div>{(details.category || '-').toUpperCase()}</div></div>
               <div><span className="muted">Status</span><div>{details.status ? <span className={`badge ${String(details.status).replace(/\s/g,'-').toLowerCase()}`}>{details.status}</span> : '-'}</div></div>
               <div><span className="muted">Filed On</span><div>{details.createdAt ? new Date(details.createdAt).toLocaleString() : '-'}</div></div>
+              <div><span className="muted">Citizen :</span><div>{details.userId?.username || details.userId?.email || '-'}</div></div>
             </div>
             {details.photoUrl && <img src={details.photoUrl} alt="evidence" style={{ width: '100%', maxHeight: 280, objectFit: 'cover', borderRadius: 10, marginBottom: 10 }} />}
             {details.location?.address && (
