@@ -13,6 +13,7 @@ type ComplaintRow = {
   category?: string
   status?: ComplaintStatus
   createdAt?: string
+  description?: string
   location?: { lat?: number; lng?: number; address?: string }
   assignedOfficerName?: string
   photoUrl?: string
@@ -52,7 +53,8 @@ export default function PoliceComplaints({ token, filter, categoryFilter, office
       const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null')
       if (cached && Array.isArray(cached)) { setItems(cached); setLoading(false) }
     } catch {}
-    policeApi.listComplaints(token, { status: statusParam || undefined, fields: 'summary', limit: 100 }).then((res) => {
+    const fieldsParam = filter === 'pending' ? undefined : 'summary'
+    policeApi.listComplaints(token, { status: statusParam || undefined, ...(fieldsParam ? { fields: fieldsParam } : {}), limit: 100 } as any).then((res) => {
       if (!active) return
       let rows = res.complaints
       if (categoryFilter) {
@@ -74,7 +76,8 @@ export default function PoliceComplaints({ token, filter, categoryFilter, office
     const id = setInterval(async () => {
       try {
         const statusParam = filter === 'active' ? 'active' : filter === 'pending' ? 'pending' : filter === 'completed' ? 'completed' : ''
-        const res = await policeApi.listComplaints(token, { status: statusParam || undefined, fields: 'summary', limit: 100 })
+        const fieldsParam = filter === 'pending' ? undefined : 'summary'
+        const res = await policeApi.listComplaints(token, { status: statusParam || undefined, ...(fieldsParam ? { fields: fieldsParam } : {}), limit: 100 } as any)
         let rows = res.complaints
         if (categoryFilter) {
           const want = categoryFilter.toLowerCase()
@@ -102,6 +105,22 @@ export default function PoliceComplaints({ token, filter, categoryFilter, office
     return Array.from(new Set([...defaultTypes, ...uniq])).sort((a, b) => a.localeCompare(b))
   }, [items])
 
+  function priorityOf(c: ComplaintRow): 'high' | 'medium' | 'low' {
+    const text = `${c.title || ''} ${c.type || ''} ${c.category || ''} ${c.description || ''}`.toLowerCase()
+    const highWords = ['accident','violence','attack','assault','murder','rape','kidnap','weapon','injury','blood','fire','arson','extortion','threat','emergency','urgent','panic','help','danger']
+    const mediumWords = ['harassment','fraud','fight','suspicious','disturbance','vandalism','theft','robbery','snatch','bully']
+    const lowWords = ['noc','verification','certificate','passport','address proof','clearance','document','service','request','lost','missing']
+    const has = (ws: string[]) => ws.some(w => text.includes(w))
+    if (has(highWords)) return 'high'
+    if ((c.category || '').toLowerCase() === 'fir') {
+      if (has(mediumWords)) return 'high'
+      return 'medium'
+    }
+    if (has(mediumWords)) return 'medium'
+    if (has(lowWords)) return 'low'
+    return 'low'
+  }
+
   const filtered = useMemo(() => {
     const norm = q.trim().toLowerCase()
     const f = items.filter(c =>
@@ -115,12 +134,43 @@ export default function PoliceComplaints({ token, filter, categoryFilter, office
         (c.status || '').toLowerCase().includes(norm)
       )
     )
+    const pr = { high: 3, medium: 2, low: 1 }
     return f.sort((a, b) => {
+      if (filter === 'pending') {
+        const pa = pr[priorityOf(a)]
+        const pb = pr[priorityOf(b)]
+        if (pa !== pb) return pb - pa
+      }
       const da = new Date(a.createdAt || 0).getTime()
       const db = new Date(b.createdAt || 0).getTime()
       return sortBy === 'newest' ? db - da : da - db
     })
   }, [items, q, statusFilter, typeFilter, sortBy])
+
+  const groupedByDate = useMemo(() => {
+    const map = new Map<string, ComplaintRow[]>()
+    for (const c of filtered) {
+      const d = new Date(c.createdAt || 0)
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+      const arr = map.get(key) || []
+      arr.push(c)
+      map.set(key, arr)
+    }
+    const entries = Array.from(map.entries()).sort((a, b) => b[0].localeCompare(a[0]))
+    return entries.map(([key, rows]) => {
+      const label = new Date(key).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })
+      const pr = { high: 3, medium: 2, low: 1 }
+      const sortedRows = rows.slice().sort((a, b) => {
+        const pa = pr[priorityOf(a)]
+        const pb = pr[priorityOf(b)]
+        if (pa !== pb) return pb - pa
+        const da = new Date(a.createdAt || 0).getTime()
+        const db = new Date(b.createdAt || 0).getTime()
+        return sortBy === 'newest' ? db - da : da - db
+      })
+      return { key, label, rows: sortedRows }
+    })
+  }, [filtered, sortBy])
 
   async function assignToMe(id?: string) {
     if (!id || !officer) return
@@ -193,43 +243,91 @@ export default function PoliceComplaints({ token, filter, categoryFilter, office
       </div>
       {error && <div className="form-error">{error}</div>}
       {loading ? <div className="muted">Loading complaints…</div> : (
-        <div className="table">
-          <div className="thead">
-            <div>ID</div>
-            <div>Title</div>
-            <div>Date</div>
-            <div>Status</div>
-            <div>Assigned</div>
-            <div>Actions</div>
-          </div>
-          {filtered.map((c) => (
-            <div className="trow" key={c._id}>
-              <div>{c._id?.slice(-6)}</div>
-              <div className="title-cell" title={c.title}>
-                {c.photoUrl ? (
-                  <img className="thumb" src={c.photoUrl} alt="complaint photo" />
-                ) : (
-                  <span className="thumb placeholder" aria-hidden />
-                )}
-                <span className="title-text">{c.title}</span>
-              </div>
-              <div>{new Date(c.createdAt || '').toLocaleDateString()}</div>
-              <div>{c.status ? <span className={`badge ${c.status.replace(/\s/g, '-').toLowerCase()}`}>{c.status}</span> : '-'}</div>
-              <div>{c.assignedOfficerName || '-'}</div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <DetailsModalButton item={c} token={token} />
-                <button className="btn sm ghost" onClick={() => assignToMe(c._id)} disabled={!officer || c.assignedOfficerName === officer?.username}>Assign to me</button>
-                <select value={c.status || 'Pending'} onChange={(e) => updateStatus(c._id, e.target.value as ComplaintStatus)} className="sort-select" style={{ paddingRight: 24 }} disabled={(c.status || '') === 'Solved'}>
-                  <option>Pending</option>
-                  <option>Under Review</option>
-                  <option>In Progress</option>
-                  <option>Solved</option>
-                </select>
-              </div>
+        <>
+          {filter === 'pending' ? (
+            <div className="grouped-table">
+              {groupedByDate.map(group => (
+                <div className="date-group" key={group.key}>
+                  <div className="date-heading">{group.label}</div>
+                  <div className="table">
+                    {group.rows.map((c) => (
+                      <div className={`trow ${priorityOf(c) === 'high' ? 'urgent-row' : ''}`} key={c._id}>
+                        <div>{c._id?.slice(-6)}</div>
+                        <div className="title-cell" title={c.title}>
+                          {c.photoUrl ? (
+                            <img className="thumb" src={c.photoUrl} alt="complaint photo" />
+                          ) : (
+                            <span className="thumb placeholder" aria-hidden />
+                          )}
+                          <span className="title-text">{c.title}</span>
+                        </div>
+                        <div>{new Date(c.createdAt || '').toLocaleDateString()}</div>
+                    <div>
+                      {c.status ? <span className={`badge ${c.status.replace(/\s/g, '-').toLowerCase()}`}>{c.status}</span> : '-'}
+                      {priorityOf(c) === 'high' && <span className="badge urgent" style={{ marginLeft: 8 }}>Urgent</span>}
+                    </div>
+                        <div>{c.assignedOfficerName || '-'}</div>
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <DetailsModalButton item={c} token={token} />
+                          <button className="btn sm ghost" onClick={() => assignToMe(c._id)} disabled={!officer || c.assignedOfficerName === officer?.username}>Assign to me</button>
+                          <select value={c.status || 'Pending'} onChange={(e) => updateStatus(c._id, e.target.value as ComplaintStatus)} className="sort-select" style={{ paddingRight: 24 }} disabled={(c.status || '') === 'Solved'}>
+                            <option>Pending</option>
+                            <option>Under Review</option>
+                            <option>In Progress</option>
+                            <option>Solved</option>
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                    {group.rows.length === 0 && <div className="muted" style={{ padding: 10 }}>No complaints for this date.</div>}
+                  </div>
+                </div>
+              ))}
+              {groupedByDate.length === 0 && <div className="muted" style={{ padding: 10 }}>No complaints match filters.</div>}
             </div>
-          ))}
-          {filtered.length === 0 && <div className="muted" style={{ padding: 10 }}>No complaints match filters.</div>}
-        </div>
+          ) : (
+            <div className="table">
+              <div className="thead">
+                <div>ID</div>
+                <div>Title</div>
+                <div>Date</div>
+                <div>Status</div>
+                <div>Assigned</div>
+                <div>Actions</div>
+              </div>
+              {filtered.map((c) => (
+                <div className={`trow ${priorityOf(c) === 'high' ? 'urgent-row' : ''}`} key={c._id}>
+                  <div>{c._id?.slice(-6)}</div>
+                  <div className="title-cell" title={c.title}>
+                    {c.photoUrl ? (
+                      <img className="thumb" src={c.photoUrl} alt="complaint photo" />
+                    ) : (
+                      <span className="thumb placeholder" aria-hidden />
+                    )}
+                    <span className="title-text">{c.title}</span>
+                  </div>
+                  <div>{new Date(c.createdAt || '').toLocaleDateString()}</div>
+                  <div>
+                    {c.status ? <span className={`badge ${c.status.replace(/\s/g, '-').toLowerCase()}`}>{c.status}</span> : '-'}
+                    {priorityOf(c) === 'high' && <span className="badge urgent" style={{ marginLeft: 8 }}>Urgent</span>}
+                  </div>
+                  <div>{c.assignedOfficerName || '-'}</div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <DetailsModalButton item={c} token={token} />
+                    <button className="btn sm ghost" onClick={() => assignToMe(c._id)} disabled={!officer || c.assignedOfficerName === officer?.username}>Assign to me</button>
+                    <select value={c.status || 'Pending'} onChange={(e) => updateStatus(c._id, e.target.value as ComplaintStatus)} className="sort-select" style={{ paddingRight: 24 }} disabled={(c.status || '') === 'Solved'}>
+                      <option>Pending</option>
+                      <option>Under Review</option>
+                      <option>In Progress</option>
+                      <option>Solved</option>
+                    </select>
+                  </div>
+                </div>
+              ))}
+              {filtered.length === 0 && <div className="muted" style={{ padding: 10 }}>No complaints match filters.</div>}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
